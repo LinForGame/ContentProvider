@@ -10,6 +10,7 @@ import android.net.Uri;
 import android.provider.ContactsContract;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,7 +25,7 @@ import android.widget.Toast;
 import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
-    private static final String TAG = "MainActivity";
+    private static final String TAG = "MainActivity111";
     Button search;
     Button add;
     @Override
@@ -56,13 +57,15 @@ public class MainActivity extends AppCompatActivity {
                     String name = cursor.getString(cursor
                             .getColumnIndex(ContactsContract
                                     .Contacts.DISPLAY_NAME));
-
+                    Log.d(TAG,"contactId:"+contactId+",name:"+name);
                     names.add(name);
+
                     Cursor phones = getContentResolver().query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI,
                             null,
                             ContactsContract.CommonDataKinds.Phone.CONTACT_ID+"="+contactId,
                             null,
                             null);
+
                     ArrayList<String> detail = new ArrayList<>();
                     while (phones.moveToNext())
                     {
@@ -83,16 +86,19 @@ public class MainActivity extends AppCompatActivity {
                     );
                     while (emails.moveToNext())
                     {
-                        String emailAddress = emails.getColumnName(emails
+                        String emailAddress = emails.getString(emails
                                         .getColumnIndex(ContactsContract
                                         .CommonDataKinds
                                         .Email.DATA));
                         detail.add("邮件地址:"+emailAddress);
                     }
                     emails.close();
+                    Log.d(TAG,"detail:"+detail);
                     details.add(detail);
 
                 }
+                for(int i=0;i<details.size();i++)
+                    Log.d(TAG,"details"+"["+i+"]"+details.get(i));
                 cursor.close();
                 View resultDialog = getLayoutInflater().inflate(R.layout.result,null);
                 ExpandableListView listView = resultDialog.findViewById(R.id.list);
@@ -155,27 +161,32 @@ public class MainActivity extends AppCompatActivity {
 
                     @Override
                     public View getGroupView(int groupPosition, boolean isExpanded, View convertView, ViewGroup parent) {
-                        TextView textView;
-                        if(convertView==null) {
-                            textView = getTextView();
-                            textView.setText(getGroup(groupPosition).toString());
-                            textView.setTag(textView);
-                        }else{
-                            textView = (TextView) convertView.getTag();
-                        }
+//                        TextView textView;
+//                        if(convertView==null) {
+//                            textView = getTextView();
+//                            textView.setText(getGroup(groupPosition).toString());
+//                            textView.setTag(textView);
+//                        }else{
+//                            textView = (TextView) convertView.getTag();
+//                        }
+                        TextView textView = getTextView();
+                        textView.setText(getGroup(groupPosition).toString());
                         return textView;
                     }
 
                     @Override
                     public View getChildView(int groupPosition, int childPosition, boolean isLastChild, View convertView, ViewGroup parent) {
-                        TextView textView;
-                        if(convertView==null) {
-                            textView = getTextView();
-                            textView.setText(getChild(groupPosition, childPosition).toString());
-                            textView.setTag(textView);
-                        }else {
-                            textView = (TextView) convertView.getTag();
-                        }
+//                        TextView textView;
+//                        if(convertView==null) {
+//                            textView = getTextView();
+//                            textView.setText(getChild(groupPosition, childPosition).toString());
+//                            textView.setTag(textView);
+//                        }else {
+//                            textView = (TextView) convertView.getTag();
+//                        }
+//                        Log.d(TAG,"textView:"+textView.getText());
+                        TextView textView = getTextView();
+                        textView.setText(getChild(groupPosition, childPosition).toString());
                         return textView;
                     }
 
